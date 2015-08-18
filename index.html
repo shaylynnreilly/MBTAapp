@@ -112,6 +112,7 @@
             }
 	    function getRoutes() {
 		if (this.readyState == 4 && this.status == 200) {
+		    console.log(this.readyState);
                     route_response = JSON.parse(this.responseText);
 		    modes = route_response.mode;
 		    text = "";
@@ -119,6 +120,11 @@
 			text = text + "<br><br><u>" + modes[x].mode_name + "</u>";
 			for (y = 0; y < modes[x].route.length; y++) {
 				text = text + "<br/>○ " + modes[x].route[y].route_name;
+				for (z = 0; z < modes[x].route[y].direction.length; z++) {
+					date = new Date(modes[x].route[y].direction[z].trip[0].sch_arr_dt * 1000);
+					text = text + "<br>\t" + modes[x].route[y].direction[z].direction_name + 
+						": " + date.getHours() + ":" + date.getMinutes();
+				}
 			}
 		    }
 		    text = text + "</p>";
