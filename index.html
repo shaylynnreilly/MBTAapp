@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MBTA</title>
+        <meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no" charset = "utf-8" />
+        <link rel="stylesheet" type="text/css" href="index.css">
+        <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_qfmjBfmskPfrhZdBkLEoikxlUmXtQQU">
+        </script>
+        <script type="text/javascript">
+            var myLat = 0;
+            var myLng = 0;
+            var request;
+	    var stops;
+	    var text;
+            //my position
+            var me = new google.maps.LatLng(myLat, myLng);
+            var myOptions = {
+                        zoom: 17, // The larger the zoom number, the bigger the zoom
+                        center: me,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+            var map;
+            var marker;
+            var infowindow = new google.maps.InfoWindow();
+            var places;
+            
+            //initializes map
+            function init()
+            {
+                map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                getMyLocation();
+            }
+            
+            //retrieves my location using geolocation
+            function getMyLocation()
+            {
+                if (navigator.geolocation) { // the navigator.geolocation object is supported on your browser
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        myLat = position.coords.latitude;
+                        myLng = position.coords.longitude;
+			myLat = 42.346961;
+		        myLng = -71.076640;
+                        renderMap();
+                    });
+                }
+                else {
+                    alert("Geolocation is not supported by your web browser.");
+                }
+            }
+            //renders map with me as center and sends my data to datastore
+            function renderMap()
+            {
+                me = new google.maps.LatLng(myLat, myLng);
+                console.log(myLat + " " + myLng);
+                // Update map and go there...
+                map.panTo(me);
+                //pull data
+                request = new XMLHttpRequest(); 
+                request.onreadystatechange = dataReady;
+                url = "http://realtime.mbta.com/developer/api/v2/stopsbylocation?api_key=wX9NwuHnZU2ToO7GmGR9uw&lat=" + myLat + "&lon=" + myLng + "&format=json"
+                request.open("GET", url , true);
+                request.send();
+                // Create a marker
+                marker = new google.maps.Marker({
+                    position: me,
+                    title: "Me",
+		    label: "ッ",
+                });
+                marker.setMap(map);
+                // Open info window on click of marker
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent(marker.title);
+                    infowindow.open(map, marker);
+                });
+            }
+            //gets data & calls functions to make markers
+            function dataReady() {
+                if (request.readyState == 4 && request.status == 200) {
+                    response = JSON.parse(request.responseText);
+                    stops = response.stop;
+                    for (i = 0; i < stops.length; i++) {
+                      stop = stops[i];
+ 		      if (stop.parent_station == "")
+                      	plotStation(stop);
+                    }
+                }
+            }
+            function plotStation(stop) {
+		//checks to see if parent station exists
+		
+                //gets station's position
+                pos = new google.maps.LatLng(stop.stop_lat, stop.stop_lon);
+                // Create a marker
+                var stop_marker = new google.maps.Marker({
+                    position: pos,
+                    title: stop.stop_name,
+                });
+                stop_marker.setMap(map);
+                // Open info window on click of marker
+                google.maps.event.addListener(stop_marker, 'click', function() {
+		    request2 = new XMLHttpRequest(); 
+                    request2.onreadystatechange = getRoutes;
+                    url2 = "http://realtime.mbta.com/developer/api/v2/routesbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop.stop_id + "&format=json"
+                    request2.open("GET", url2 , true);
+                    request2.send();
+		    content = "<p>" + stop.stop_name + text;
+                    infowindow.setContent(content);
+                    infowindow.open(map, stop_marker);
+                });
+            }
+	    function getRoutes() {
+		if (this.readyState == 4 && this.status == 200) {
+                    route_response = JSON.parse(this.responseText);
+		    modes = route_response.mode;
+		    text = "";
+		    for (x = 0; x < modes.length; x++) {
+			text = text + "<br><br><u>" + modes[x].mode_name + "</u>";
+			for (y = 0; y < modes[x].route.length; y++) {
+				text = text + "<br/>○ " + modes[x].route[y].route_name;
+			}
+		    }
+		    text = text + "</p>";
+		}
+	    } 
+        </script>
+    </head>
+    <body onload ="init()">
+        <div id="map_canvas">
+        </div>
+    </body>
+</html>
