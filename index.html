@@ -4,6 +4,7 @@
         <title>MBTA</title>
         <meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no" charset = "utf-8" />
         <link rel="stylesheet" type="text/css" href="index.css">
+        <link rel="apple-touch-icon" href="T.png"/>
         <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_qfmjBfmskPfrhZdBkLEoikxlUmXtQQU">
         </script>
@@ -63,7 +64,7 @@
                 marker = new google.maps.Marker({
                     position: me,
                     title: "Me",
-		    label: "☺",
+		    icon: "smiley.png",
                 });
                 marker.setMap(map);
                 // Open info window on click of marker
@@ -93,6 +94,7 @@
                 var stop_marker = new google.maps.Marker({
                     position: pos,
                     title: stop.stop_name,
+                    icon: "tiny-t.png",
                 });
                 stop_marker.setMap(map);
                 // Open info window on click of marker
