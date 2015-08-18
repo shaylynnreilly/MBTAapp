@@ -104,9 +104,12 @@
                     url2 = "http://realtime.mbta.com/developer/api/v2/routesbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop.stop_id + "&format=json"
                     request2.open("GET", url2 , true);
                     request2.send();
-		    content = "<p>" + stop.stop_name + text;
-                    infowindow.setContent(content);
-                    infowindow.open(map, stop_marker);
+		    //allows time for request to go through
+		    setTimeout(function(){
+    			content = "<p><b style='font-size:20px'>" + stop.stop_name + "</b>" + text;
+                    	infowindow.setContent(content);
+                    	infowindow.open(map, stop_marker);
+		    }, 400);
                 });
             }
 	    function getRoutes() {
