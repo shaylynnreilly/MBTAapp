@@ -63,7 +63,7 @@
                 marker = new google.maps.Marker({
                     position: me,
                     title: "Me",
-		    label: "ッ",
+		    label: "☺",
                 });
                 marker.setMap(map);
                 // Open info window on click of marker
@@ -99,32 +99,62 @@
                 google.maps.event.addListener(stop_marker, 'click', function() {
 		    request2 = new XMLHttpRequest(); 
                     request2.onreadystatechange = getRoutes;
-                    url2 = "http://realtime.mbta.com/developer/api/v2/routesbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop.stop_id + "&format=json"
+                    url2 = "http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop.stop_id + "&format=json"
                     request2.open("GET", url2 , true);
                     request2.send();
 		    //allows time for request to go through
 		    setTimeout(function(){
-    			content = "<p><b style='font-size:20px'>" + stop.stop_name + "</b>" + text;
+                current_time = new Date();
+                hour = current_time.getHours();
+                        if (hour == 0 || hour == 12) 
+                            mod_hour = 12
+                        else 
+                            mod_hour = hour % 12;
+                        if (hour >= 12)
+                            stamp = "pm";
+                        else
+                            stamp = "am";
+                        minutes = current_time.getMinutes();
+                        if (minutes < 10)
+                            minutes = "0" + minutes;
+    			content = "<p><b style='font-size:20px'>" + stop.stop_name + "</b><br>Current time: " + mod_hour + ":" + minutes + stamp + "<br>" + text;
                     	infowindow.setContent(content);
                     	infowindow.open(map, stop_marker);
-		    }, 400);
+		    }, 700);
                 });
             }
 	    function getRoutes() {
 		if (this.readyState == 4 && this.status == 200) {
 		    console.log(this.readyState);
-                    route_response = JSON.parse(this.responseText);
+            route_response = JSON.parse(this.responseText);
 		    modes = route_response.mode;
 		    text = "";
 		    for (x = 0; x < modes.length; x++) {
-			text = text + "<br><br><u>" + modes[x].mode_name + "</u>";
+			text = text + "<br><u>" + modes[x].mode_name + "</u>";
 			for (y = 0; y < modes[x].route.length; y++) {
-				text = text + "<br/>○ " + modes[x].route[y].route_name;
+				text = text + "<br/>" + modes[x].route[y].route_name;
 				for (z = 0; z < modes[x].route[y].direction.length; z++) {
-					date = new Date(modes[x].route[y].direction[z].trip[0].sch_arr_dt * 1000);
-					text = text + "<br>\t" + modes[x].route[y].direction[z].direction_name + 
-						": " + date.getHours() + ":" + date.getMinutes();
+                    text = text + "<br>To " + modes[x].route[y].direction[z].trip[0].trip_headsign + ": ";
+                    for (w = 0; w < modes[x].route[y].direction[z].trip.length && w < 5; w++) {
+					   date = new Date(modes[x].route[y].direction[z].trip[w].sch_arr_dt * 1000);
+                        hour = date.getHours();
+                        if (hour == 0 || hour == 12) 
+                            mod_hour = 12
+                        else 
+                            mod_hour = hour % 12;
+                        if (hour >= 12)
+                            stamp = "pm";
+                        else
+                            stamp = "am";
+                        minutes = date.getMinutes();
+                        if (minutes < 10)
+                            minutes = "0" + minutes; 
+					   text = text + mod_hour + ":" + minutes + stamp;
+                       if (w != modes[x].route[y].direction[z].trip.length - 1 && w != 4)
+                            text = text + ", ";
+                    }
 				}
+                text = text + "<br>";
 			}
 		    }
 		    text = text + "</p>";
