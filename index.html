@@ -160,8 +160,35 @@
 					for (z = 0; z < directions.length; z++) {
 						if (directions[z].trip[0].trip_headsign != undefined)
                     		    			text = text + "<br>To " + directions[z].trip[0].trip_headsign + ": ";
-						else
-							text = text + "<br>" + directions[z].direction_name + ": ";
+						else {
+							if (routes[y].route_name == "Green Line B") {
+							    if (directions[z].direction_name == "Westbound")
+								direction_name = "To Boston College";
+							    if (directions[z].direction_name == "Eastbound")
+								direction_name = "To Park Street";
+							}
+							else if (routes[y].route_name == "Green Line C") {
+							    if (directions[z].direction_name == "Westbound")
+								direction_name = "To Cleveland Circle";
+							    if (directions[z].direction_name == "Eastbound")
+								direction_name = "To North Station";
+							}
+							else if (routes[y].route_name == "Green Line D") {
+							    if (directions[z].direction_name == "Westbound")
+								direction_name = "To Riverside";
+							    if (directions[z].direction_name == "Eastbound")
+								direction_name = "To Park Street";
+							}
+							else if (routes[y].route_name == "Green Line E") {
+							    if (directions[z].direction_name == "Westbound")
+								direction_name = "To Heath Street";
+							    if (directions[z].direction_name == "Eastbound")
+								direction_name = "To Lechmere";
+							}
+							else
+								direction_name = directions[z].direction_name;
+							text = text + "<br>" + direction_name + ": ";
+						}
 		    		    		trips = directions[z].trip;
                     		    		for (w = 0; w < trips.length && w < 5; w++) {
 							date = new Date(trips[w].sch_arr_dt * 1000);
