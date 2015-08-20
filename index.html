@@ -287,13 +287,21 @@
                 route_path.setMap(map);
             }
            }
+function toggle_visibility() {
+       var e = document.getElementById("legend");
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+    }
         </script>
     </head>
     <body onload ="init()">
         <div id="map_canvas">
         </div>
-        <div id="legend">
-            <center><b>Legend</b></center><br/>
+        <div id="legend" onclick="toggle_visibility();">
+            <center><b>Legend</b><br/>
+	    (click to close)</center><br/>
             <div class="legend" style='background-color:red; color:white; padding:2px'>Red line</div><br/>
             <div class="legend" style='background-color:orange; color:white; padding:2px'>Orange line</div><br/>
             <div class="legend" style='background-color:green; color:white; padding:2px'>Green line</div><br/>
