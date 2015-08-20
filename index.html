@@ -139,7 +139,7 @@
 				text = text + "<p id=\"" + modes[x].mode_name + "\">";
 				routes = modes[x].route;
 				for (y = 0; y < routes.length; y++) {
-					text = text + "<span style='cursor:pointer;font-weight:bold;line-height:18px;padding:2px;color:white;background-color:";
+					text = text + "<span onclick='full_route(" + routes[y].route_id + ")' style='cursor:pointer;font-weight:bold;line-height:18px;padding:2px;color:white;background-color:";
 					if (routes[y].route_name == "Red Line")
 						text = text + "red'>";
 					else if (routes[y].route_name.indexOf("Green Line") != -1)
@@ -153,7 +153,7 @@
 					else if (modes[x].mode_name == "Commuter Rail")
 						text = text + "purple'>";
 					else 
-						text = text + "black' onClick='full_route(" + routes[y].route_id + ")'>";
+						text = text + "black'>";
 					text = text + routes[y].route_name + "</span>";					
 					routes[y].route_name;
 					directions = routes[y].direction;
@@ -251,6 +251,18 @@
     </head>
     <body onload ="init()">
         <div id="map_canvas">
+        </div>
+         <div id="legend">
+            <center><b>Legend</b></center><br/>
+            <div class="legend" style='background-color:red; color:white; padding:2px'>Red line</div><br/>
+            <div class="legend" style='background-color:orange; color:white; padding:2px'>Orange line</div><br/>
+            <div class="legend" style='background-color:green; color:white; padding:2px'>Green line</div><br/>
+            <div class="legend" style='background-color:blue; color:white; padding:2px'>Blue line</div><br/>
+            <div class="legend" style='background-color:purple; color:white; padding:2px'>Commuter Rail</div><br/>
+            <div class="legend" style='background-color:silver; color:white; padding:2px'>Silver line</div><br/>
+            <div class="legend" style='background-color:black; color:white; padding:2px'>Busses</div><br/>
+            <span style='color:green'>12:00pm</span>: predicted arrival<br/>
+            <span>12:00pm</span>: scheduled arrival<br/>
         </div>
     </body>
 </html>
