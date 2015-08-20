@@ -139,7 +139,7 @@
 				text = text + "<p id=\"" + modes[x].mode_name + "\">";
 				routes = modes[x].route;
 				for (y = 0; y < routes.length; y++) {
-					text = text + "<span style='font-weight:bold;line-height:18px;padding:2px;color:white;background-color:";
+					text = text + "<span style='cursor:pointer;font-weight:bold;line-height:18px;padding:2px;color:white;background-color:";
 					if (routes[y].route_name == "Red Line")
 						text = text + "red'>";
 					else if (routes[y].route_name.indexOf("Green Line") != -1)
@@ -153,7 +153,7 @@
 					else if (modes[x].mode_name == "Commuter Rail")
 						text = text + "purple'>";
 					else 
-						text = text + "black'>";
+						text = text + "black onClick='full_route(" + routes[y].route_id + ")'>";
 					text = text + routes[y].route_name + "</span>";					
 					routes[y].route_name;
 					directions = routes[y].direction;
@@ -234,6 +234,19 @@
 			parse_JSON(schedule_response, "true");
 	    	} 
 	    }
+	    function full_route(route_plot) {
+            request4 = new XMLHttpRequest;
+            request4.onreadystatechange = plotRoute;
+            console.log("route: " + route_plot);
+            url4 = ("http://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key=wX9NwuHnZU2ToO7GmGR9uw&route=" + route_plot + "&format=json");
+            request4.open("GET", url4, true);
+            request4.send();
+           }
+           function plotRoute () {
+            if (this.readyState == 4 && this.status == 200) {
+                response4 = JSON.parse(this.responseText);
+            }
+           }
         </script>
     </head>
     <body onload ="init()">
