@@ -66,7 +66,7 @@
                 marker = new google.maps.Marker({
                     position: me,
                     title: "Me",
-           	    icon: "smiley.png",
+                    icon: "smiley.png",
                 });
                 marker.setMap(map);
                 // Open info window on click of marker
@@ -103,7 +103,11 @@
                 google.maps.event.addListener(stop_marker, 'click', function() {
             request2 = new XMLHttpRequest(); 
                     request2.onreadystatechange = getRoutes;
-                    url2 = "http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop.stop_id + "&format=json"
+                    url2 = "http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop.stop_id + "&format=json";
+		    if (stop.parent_station != "") {
+			console.log(stop.parent_station);
+			url2 = "http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop.parent_station + "&format=json";
+		    }
                     request2.open("GET", url2 , true);
                     request2.send();
             //allows time for request to go through
@@ -124,6 +128,9 @@
                 request3 = new XMLHttpRequest();
                 request3.onreadystatechange = getSchedule;
                 url3 = "http://realtime.mbta.com/developer/api/v2/schedulebystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop.stop_id + "&format=json";
+		if (stop.parent_station != "") {
+			url3 = "http://realtime.mbta.com/developer/api/v2/schedulebystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop.parent_station + "&format=json";
+		}
                 request3.open("GET", url3, true);
                 request3.send();
                 }, 600);
@@ -142,7 +149,7 @@
                 routes = modes[x].route;
                 for (y = 0; y < routes.length; y++) {
                     if (schedule == "false" || (schedule == "true" && text.indexOf(routes[y].route_name) == -1)) {
-                    text = text + "<span onclick='full_route('" + routes[y].route_id + "')' style='cursor:pointer;font-weight:bold;line-height:18px;padding:2px;color:white;background-color:";
+                    text = text + "<span onclick='full_route(\"" + routes[y].route_id + "\", \"" + routes[y].route_name + "\")' style='cursor:pointer;font-weight:bold;line-height:18px;padding:2px;color:white;background-color:";
                     if (routes[y].route_name == "Red Line")
                         text = text + "red'>";
                     else if (routes[y].route_name.indexOf("Green Line") != -1)
@@ -157,7 +164,6 @@
                         text = text + "purple'>";
                     else 
                         text = text + "black'>";
-                    console.log(text);
                     text = text + routes[y].route_name + "</span>";                 
                     directions = routes[y].direction;
                     for (z = 0; z < directions.length; z++) {
@@ -238,7 +244,8 @@
             parse_JSON(schedule_response, "true");
             } 
         }
-        function full_route(route_plot) {
+        function full_route(route_plot, full_name) {
+	    full_route_name = full_name;
             request4 = new XMLHttpRequest;
             request4.onreadystatechange = plotRoute;
             url4 = ("http://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key=wX9NwuHnZU2ToO7GmGR9uw&route=" + route_plot + "&format=json");
@@ -251,9 +258,9 @@
                 var all_stops = response4.direction[0];
                 infowindow.close();
                 var route_array = [];
-                console.log(all_stops.stop);
                 for (var c = 0; c < all_stops.stop.length; c++) {
-                    plotStation(all_stops.stop[c]);
+		    if (full_route_name != all_stops.stop.route_name)
+                    	plotStation(all_stops.stop[c]);
                     var latlong = new google.maps.LatLng(all_stops.stop[c].stop_lat, all_stops.stop[c].stop_lon);
                     route_array.push(latlong);
                 }
@@ -295,7 +302,8 @@
             <div class="legend" style='background-color:silver; color:white; padding:2px'>Silver line</div><br/>
             <div class="legend" style='background-color:black; color:white; padding:2px'>Busses</div><br/>
             <span style='color:green'>12:00pm</span>: predicted arrival<br/>
-            <span>12:00pm</span>: scheduled arrival<br/>
+            <span>12:00pm</span>: scheduled arrival<br/><br/>
+	    Click on any route to see full route
         </div>
     </body>
 </html>
