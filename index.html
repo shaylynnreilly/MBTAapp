@@ -288,8 +288,8 @@
             }
            }
 function toggle_visibility() {
-       var child = document.getElementById("legend");
-       child.parentNode.removeChild(child);
+       var element = document.getElementById("body");
+       element.innerHTML = "<div id='map_canvas'></div>";
     }
         </script>
     </head>
