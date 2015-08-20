@@ -239,10 +239,8 @@
             } 
         }
         function full_route(route_plot) {
-            console.log("here");
             request4 = new XMLHttpRequest;
             request4.onreadystatechange = plotRoute;
-            console.log("route: " + route_plot);
             url4 = ("http://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key=wX9NwuHnZU2ToO7GmGR9uw&route=" + route_plot + "&format=json");
             request4.open("GET", url4, true);
             request4.send();
@@ -250,8 +248,36 @@
            function plotRoute () {
             if (this.readyState == 4 && this.status == 200) {
                 response4 = JSON.parse(this.responseText);
-                infoWindow.close();
-                console.log("hi");
+                var all_stops = response4.direction[0];
+                infowindow.close();
+                var route_array = [];
+                console.log(all_stops.stop);
+                for (var c = 0; c < all_stops.stop.length; c++) {
+                    plotStation(all_stops.stop[c]);
+                    var latlong = new google.maps.LatLng(all_stops.stop[c].stop_lat, all_stops.stop[c].stop_lon);
+                    route_array.push(latlong);
+                }
+                var linecolor = "";
+                    if (full_route_name == "Red Line")
+                        linecolor = "#FF0000";
+                    else if (full_route_name.indexOf("Green Line") != -1)
+                        linecolor = "#009933";
+                    else if (full_route_name == "Orange Line")
+                        linecolor = "#FF6600";
+                    else if (full_route_name == "Blue Line")
+                        linecolor = "#0000FF";
+                    else if (full_route_name.indexOf("Silver Line") != -1)
+                        linecolor = "#C0C0C0";
+                    else if (full_route_name == "Commuter Rail")
+                        linecolor = "#800080";
+                    else 
+                        linecolor = "#000000";
+                var route_path = new google.maps.Polyline({
+                    path: route_array,
+                    strokeColor: linecolor,
+                    strokeWeight: 2
+                });
+                route_path.setMap(map);
             }
            }
         </script>
