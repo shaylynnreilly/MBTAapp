@@ -288,9 +288,8 @@
             }
            }
 function toggle_visibility() {
-       var parent = document.getElementById("body");
        var child = document.getElementById("legend");
-       parent.removeChild(child);
+       child.parentNode.removeChild(child);
     }
         </script>
     </head>
