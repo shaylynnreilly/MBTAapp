@@ -288,11 +288,9 @@
             }
            }
 function toggle_visibility() {
-       var e = document.getElementById("legend");
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
+       var parent = document.getElementById("body");
+       var child = document.getElementById("legend");
+       parent.removeChild(child);
     }
         </script>
     </head>
