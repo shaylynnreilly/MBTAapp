@@ -3,7 +3,7 @@
     <head>
         <title>MBTA</title>
         <meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no" charset = "utf-8" />
-        <link rel="stylesheet" type="text/css" href="test.css">
+        <link rel="stylesheet" type="text/css" href="index.css">
         <link rel="apple-touch-icon" href="T.png"/>
         <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_qfmjBfmskPfrhZdBkLEoikxlUmXtQQU">
@@ -42,8 +42,6 @@
                     navigator.geolocation.getCurrentPosition(function(position) {
                         myLat = position.coords.latitude;
                         myLng = position.coords.longitude;
-                        myLat = 42.3473;
-                        myLng = -71.0755;
                         renderMap();
                     });
                 }
@@ -68,7 +66,7 @@
                 marker = new google.maps.Marker({
                     position: me,
                     title: "Me",
-                    //icon: "smiley.png",
+                    icon: "smiley.png",
                 });
                 marker.setMap(map);
                 // Open info window on click of marker
@@ -83,7 +81,6 @@
                     	legend.innerHTML = legend_content;
                     else
                     	legend.innerHTML = "<center><b>Legend</b><br/>(click to open)</center>";
-	    	    //infowindow.open(map, legend);
 	    	});
             }
             //gets data & calls functions to make markers
@@ -105,7 +102,7 @@
                 var stop_marker = new google.maps.Marker({
                     position: pos,
                     title: stop.stop_name,
-                    //icon: "tiny-t.png",
+                    icon: "tiny-t.png",
                 });
                 stop_marker.setMap(map);
                 // Open info window on click of marker
