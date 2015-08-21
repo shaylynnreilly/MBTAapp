@@ -3,7 +3,7 @@
     <head>
         <title>MBTA</title>
         <meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no" charset = "utf-8" />
-        <link rel="stylesheet" type="text/css" href="index.css">
+        <link rel="stylesheet" type="text/css" href="test.css">
         <link rel="apple-touch-icon" href="T.png"/>
         <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_qfmjBfmskPfrhZdBkLEoikxlUmXtQQU">
@@ -42,6 +42,8 @@
                     navigator.geolocation.getCurrentPosition(function(position) {
                         myLat = position.coords.latitude;
                         myLng = position.coords.longitude;
+                        myLat = 42.3473;
+                        myLng = -71.0755;
                         renderMap();
                     });
                 }
@@ -66,7 +68,7 @@
                 marker = new google.maps.Marker({
                     position: me,
                     title: "Me",
-                    icon: "smiley.png",
+                    //icon: "smiley.png",
                 });
                 marker.setMap(map);
                 // Open info window on click of marker
@@ -81,6 +83,7 @@
                     	legend.innerHTML = legend_content;
                     else
                     	legend.innerHTML = "<center><b>Legend</b><br/>(click to open)</center>";
+	    	    //infowindow.open(map, legend);
 	    	});
             }
             //gets data & calls functions to make markers
@@ -102,7 +105,7 @@
                 var stop_marker = new google.maps.Marker({
                     position: pos,
                     title: stop.stop_name,
-                    icon: "tiny-t.png",
+                    //icon: "tiny-t.png",
                 });
                 stop_marker.setMap(map);
                 // Open info window on click of marker
@@ -259,14 +262,22 @@
         function plotRoute () {
             if (this.readyState == 4 && this.status == 200) {
                 response4 = JSON.parse(this.responseText);
-                var all_stops = response4.direction[0];
+                var all_stops_inbound = response4.direction[0];
+                var all_stops_outbound = response4.direction[1];
                 infowindow.close();
-                var route_array = [];
-                for (var c = 0; c < all_stops.stop.length; c++) {
-		    if (full_route_name != all_stops.stop.route_name)
-                    	plotStation(all_stops.stop[c]);
-                    var latlong = new google.maps.LatLng(all_stops.stop[c].stop_lat, all_stops.stop[c].stop_lon);
-                    route_array.push(latlong);
+                var route_array_inbound = [];
+                for (var c = 0; c < all_stops_inbound.stop.length; c++) {
+		    if (full_route_name != all_stops_inbound.stop.route_name)
+                    	plotStation(all_stops_inbound.stop[c]);
+                    var latlong = new google.maps.LatLng(all_stops_inbound.stop[c].stop_lat, all_stops_inbound.stop[c].stop_lon);
+                    route_array_inbound.push(latlong);
+                }
+                var route_array_outbound = [];
+                for (var c = 0; c < all_stops_outbound.stop.length; c++) {
+		    if (full_route_name != all_stops_outbound.stop.route_name)
+                    	plotStation(all_stops_outbound.stop[c]);
+                    var latlong = new google.maps.LatLng(all_stops_outbound.stop[c].stop_lat, all_stops_outbound.stop[c].stop_lon);
+                    route_array_outbound.push(latlong);
                 }
                 var linecolor = "";
                     if (full_route_name == "Red Line")
@@ -283,14 +294,25 @@
                         linecolor = "#800080";
                     else 
                         linecolor = "#000000";
-                var route_path = new google.maps.Polyline({
-                    path: route_array,
+                var route_path_inbound = new google.maps.Polyline({
+                    path: route_array_inbound,
                     strokeColor: linecolor,
-                    strokeWeight: 3
+                    strokeWeight: 3,
                 });
-                route_path.setMap(map);
-                google.maps.event.addListener(route_path, 'click', function() {
-                    route_path.setMap(null);
+                var route_path_outbound = new google.maps.Polyline({
+                    path: route_array_outbound,
+                    strokeColor: linecolor,
+                    strokeWeight: 3,
+                });
+                route_path_inbound.setMap(map);
+                route_path_outbound.setMap(map);
+                google.maps.event.addListener(route_path_inbound, 'click', function() {
+                    route_path_inbound.setMap(null);
+                    route_path_outbound.setMap(null);
+                });
+                google.maps.event.addListener(route_path_outbound, 'click', function() {
+                    route_path_outbound.setMap(null);
+                    route_path_inbound.setMap(null);
                 });
             }
         }
