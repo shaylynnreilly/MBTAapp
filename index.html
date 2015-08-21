@@ -3,7 +3,7 @@
     <head>
         <title>MBTA</title>
         <meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no" charset = "utf-8" />
-        <link rel="stylesheet" type="text/css" href="index.css">
+        <link rel="stylesheet" type="text/css" href="test.css">
         <link rel="apple-touch-icon" href="T.png"/>
         <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_qfmjBfmskPfrhZdBkLEoikxlUmXtQQU">
@@ -42,6 +42,8 @@
                     navigator.geolocation.getCurrentPosition(function(position) {
                         myLat = position.coords.latitude;
                         myLng = position.coords.longitude;
+                        myLat = 42.3473;
+                        myLng = -71.0755;
                         renderMap();
                     });
                 }
@@ -66,7 +68,7 @@
                 marker = new google.maps.Marker({
                     position: me,
                     title: "Me",
-                    icon: "smiley.png",
+                    //icon: "smiley.png",
                 });
                 marker.setMap(map);
                 // Open info window on click of marker
@@ -75,12 +77,13 @@
                     infowindow.open(map, marker);
                 });
                 legend = document.getElementById("legend");
-                legend_content = "<center><b>Legend</b><br/>(click to close)</center><br/><div class=\"legend\" style='background-color:red; color:white; padding:2px'>Red line</div><br/><div class=\"legend\" style='background-color:orange; color:white; padding:2px'>Orange line</div><br/><div class=\"legend\" style='background-color:green; color:white; padding:2px'>Green line</div><br/><div class=\"legend\" style='background-color:blue; color:white; padding:2px'>Blue line</div><br/><div class=\"legend\" style='background-color:purple; color:white; padding:2px'>Commuter Rail</div><br/><div class=\"legend\" style='background-color:silver; color:white; padding:2px'>Silver line</div><br/><div class=\"legend\" style='background-color:black; color:white; padding:2px'>Busses</div><br/><span style='color:green'>12:00pm</span>: predicted arrival<br/><span>12:00pm</span>: scheduled arrival<br/><br/>Click on any route to see full route";
+                legend_content = "<center><b>Legend</b><br/>(click to close)</center><br/><div class=\"legend\" style='background-color:red; color:white; padding:2px'>Red line</div><br/><div class=\"legend\" style='background-color:orange; color:white; padding:2px'>Orange line</div><br/><div class=\"legend\" style='background-color:green; color:white; padding:2px'>Green line</div><br/><div class=\"legend\" style='background-color:blue; color:white; padding:2px'>Blue line</div><br/><div class=\"legend\" style='background-color:purple; color:white; padding:2px'>Commuter Rail</div><br/><div class=\"legend\" style='background-color:silver; color:white; padding:2px'>Silver line</div><br/><div class=\"legend\" style='background-color:black; color:white; padding:2px'>Busses</div><br/><span style='color:green'>12:00pm</span>: predicted arrival<br/><span>12:00pm</span>: scheduled arrival<br/><br/>Click on any route to see full route<br/>Click on any line to remove it";
                 google.maps.event.addDomListener(legend, 'click', function () {
                     if (legend.innerHTML.indexOf("click to open") != -1)
                     	legend.innerHTML = legend_content;
                     else
                     	legend.innerHTML = "<center><b>Legend</b><br/>(click to open)</center>";
+	    	    //infowindow.open(map, legend);
 	    	});
             }
             //gets data & calls functions to make markers
@@ -102,7 +105,7 @@
                 var stop_marker = new google.maps.Marker({
                     position: pos,
                     title: stop.stop_name,
-                    icon: "tiny-t.png",
+                    //icon: "tiny-t.png",
                 });
                 stop_marker.setMap(map);
                 // Open info window on click of marker
@@ -153,6 +156,7 @@
                     routes = modes[x].route;
                     for (y = 0; y < routes.length; y++) {
                         if (schedule == "false" || (schedule == "true" && text.indexOf(routes[y].route_name) == -1)) {
+                            console.log(routes[y].route_name);
                             text = text + "<span onclick='full_route(\"" + routes[y].route_id + "\", \"" + routes[y].route_name + "\")' style='cursor:pointer;font-weight:bold;line-height:18px;padding:2px;color:white;background-color:";
                             if (routes[y].route_name == "Red Line")
                                 text = text + "red'>";
@@ -278,16 +282,19 @@
                         linecolor = "#0000FF";
                     else if (full_route_name.indexOf("Silver Line") != -1)
                         linecolor = "#C0C0C0";
-                    else if (full_route_name == "Commuter Rail")
+                    else if (full_route_name.indexOf("Line") != -1)
                         linecolor = "#800080";
                     else 
                         linecolor = "#000000";
                 var route_path = new google.maps.Polyline({
                     path: route_array,
                     strokeColor: linecolor,
-                    strokeWeight: 2
+                    strokeWeight: 3
                 });
                 route_path.setMap(map);
+                google.maps.event.addListener(route_path, 'click', function() {
+                    route_path.setMap(null);
+                });
             }
         }
 	function toggle_visibility() {
