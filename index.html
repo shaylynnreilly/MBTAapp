@@ -42,6 +42,8 @@
                     navigator.geolocation.getCurrentPosition(function(position) {
                         myLat = position.coords.latitude;
                         myLng = position.coords.longitude;
+                        myLat = 42.3473;
+                        myLng = -71.0755;
                         renderMap();
                     });
                 }
@@ -140,7 +142,9 @@
                     request3.send();
                 }, 600);
                 setTimeout(function(){
-                content = "<p><b style='font-size:20px'>" + stop.stop_name + "</b><br>Current time: " + current_mod_hour + ":" + current_minutes + current_stamp + "</p>" + text;
+                    content = "<p><b style='font-size:20px'>" + stop.stop_name + "</b><br>Current time: " + current_mod_hour + ":" + current_minutes + current_stamp + "</p>" + text;
+                    if (stop.parent_station_name != "")
+                	content = "<p><b style='font-size:20px'>" + stop.parent_station_name + "</b><br>Current time: " + current_mod_hour + ":" + current_minutes + current_stamp + "</p>" + text;
                     infowindow.setContent(content);
                     infowindow.open(map, stop_marker);
                 }, 1000);
