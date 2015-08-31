@@ -75,6 +75,9 @@ body {
 	}
 	#search_box {
 		width: 130px;
-		font-size:10px;
+		font-size:12px;
+	}
+	#button {
+		font-size: 12px;
 	}
 }
