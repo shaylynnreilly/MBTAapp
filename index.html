@@ -354,12 +354,19 @@
         }
         function route_loop(searched) {
             showLoading();
+            searching = "";
             search_station = searched;
             route_request = new XMLHttpRequest;
             route_request.onreadystatechange = station_loop;
             route_url = "http://realtime.mbta.com/developer/api/v2/routes?api_key=wX9NwuHnZU2ToO7GmGR9uw&format=json";
             route_request.open("GET", route_url, true);
             route_request.send();
+            setTimeout(function(){
+                if (searching != "true") {
+                    hideLoading();
+                    alert("There aren't any stations with that name");
+                }
+            }, 1100);
         }
         function station_loop() {
             if (this.readyState == 4 && this.status == 200) {
@@ -385,6 +392,7 @@
                         plotStation(station_request_response.direction[x].stop[y]);
                         var new_position = new google.maps.LatLng(station_request_response.direction[x].stop[y].stop_lat, station_request_response.direction[x].stop[y].stop_lon)
                         map.panTo(new_position);
+                        searching = "true";
                         hideLoading();
                         break;
                     }
@@ -393,8 +401,6 @@
                     break;
                 }
             }
-            hideLoading();
-            alert("There aren't any stations with that name");
             }
         }
         function showLoading() {
