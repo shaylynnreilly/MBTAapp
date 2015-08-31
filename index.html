@@ -388,7 +388,8 @@
             for (var x = 0; x < station_request_response.direction.length; x++) {
                 for (var y = 0; y < station_request_response.direction[x].stop.length; y++) {
                     var station_check = station_request_response.direction[x].stop[y].parent_station_name.toLowerCase();
-                    if (station_check.indexOf(search_station.toLowerCase()) != -1) {
+                    var station_check2 = station_request_response.direction[x].stop[y].stop_name.toLowerCase();
+                    if ((station_check.indexOf(search_station.toLowerCase()) != -1) || (station_check2.indexOf(search_station.toLowerCase()) != -1)) {
                         plotStation(station_request_response.direction[x].stop[y]);
                         var new_position = new google.maps.LatLng(station_request_response.direction[x].stop[y].stop_lat, station_request_response.direction[x].stop[y].stop_lon)
                         map.panTo(new_position);
