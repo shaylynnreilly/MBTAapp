@@ -73,4 +73,7 @@ body {
 		margin-bottom: 5px;
 		font-size: 10px;
 	}
+	#search_box {
+		width: 130px;
+	}
 }
