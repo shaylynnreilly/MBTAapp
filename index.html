@@ -26,7 +26,6 @@
             var marker;
             var infowindow = new google.maps.InfoWindow();
             var places;
-            
             //initializes map
             function init()
             {
@@ -37,8 +36,6 @@
                 map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
                 var loading = document.getElementById("loading");
                 map.controls[google.maps.ControlPosition.TOP_CENTER].push(loading);
-
-
                 $('input').on('keydown', function(event) {
                     var x = event.which;
                     if (x === 13) {
@@ -47,8 +44,6 @@
                         route_loop(htmlform.station.value);
                     }
                 });
-
-
                 getMyLocation();
             }
             
