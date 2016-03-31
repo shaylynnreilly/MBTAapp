@@ -76,6 +76,8 @@ body {
 	#search_box {
 		width: 130px;
 		font-size:12px;
+		margin-left: -5px;
+		margin-right: -5px;
 	}
 	#button {
 		font-size: 13px;
