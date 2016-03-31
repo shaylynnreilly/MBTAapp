@@ -387,6 +387,8 @@
         function find_station() {
             if (this.readyState == 4 && this.status == 200) {
             station_request_response = JSON.parse(this.responseText);
+            var searched_station_results = [];
+            var searched_station_positions = [];
             for (var x = 0; x < station_request_response.direction.length; x++) {
                 for (var y = 0; y < station_request_response.direction[x].stop.length; y++) {
                     var station_check = station_request_response.direction[x].stop[y].parent_station_name.toLowerCase();
@@ -394,17 +396,30 @@
                     if ((station_check.indexOf(search_station.toLowerCase()) != -1) || (station_check2.indexOf(search_station.toLowerCase()) != -1)) {
                         plotStation(station_request_response.direction[x].stop[y]);
                         var new_position = new google.maps.LatLng(station_request_response.direction[x].stop[y].stop_lat, station_request_response.direction[x].stop[y].stop_lon)
-                        map.panTo(new_position);
+                        searched_station_results.push(station_check + " " + station_check2);
+                        searched_station_positions.push(new_position)
+                        //map.panTo(new_position);
                         searching = "true";
                         hideLoading();
                         break;
                     }
                 }
+                //put list of returned search results if searched station results > len 1 -- clickable 
+                var search_result_box = document.getElementById("search_results");
+                var content = "<ul>";
+                for (var i = 0; i < searched_station_results.length; i++) {
+                    content = content + "<li onclick=\"search_select(" + searched_station_positions[i] + ")\">" + searched_station_results[i] + "</li>";
+                }
+                content = content + "</ul>";
                 if (station_check.indexOf(search_station.toLowerCase()) != -1) {
                     break;
                 }
             }
             }
+        }
+        function search_select(pos) {
+            $("#search_results").hide();
+            map.panTo(pos)
         }
         function showLoading() {
             $("#loading").show();
@@ -422,6 +437,8 @@
         </form>
         <div id="loading">
             <p><img id="loading_gif" src="loading.gif"/><br/>Loading</p>
+        </div>
+        <div id = "search_results">
         </div>
         <div id="map_canvas">
         </div>
