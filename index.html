@@ -120,6 +120,7 @@
                 stop_marker.setMap(map);
                 // Open info window on click of marker
                 google.maps.event.addListener(stop_marker, 'click', function() {
+                    showLoading();
                     text = "";
                     station_request(stop.stop_id, stop.parent_station)
                     setTimeout(function(){
@@ -128,8 +129,9 @@
                             content = "<p><b style='font-size:20px'>" + stop.parent_station_name + "</b><br>Current time: " + current_mod_hour + ":" + current_minutes + current_stamp + "</p>" + text;
                         }
                         infowindow.setContent(content);
+                        hideLoading();
                         infowindow.open(map, stop_marker);
-                    }, 1000);
+                    }, 1200);
                 });
             }
             function station_request(stop_id, parent_station) {
