@@ -27,7 +27,7 @@ body {
 	margin-bottom: 2px;
 	display: inline-block;
 }
-#search_box {
+#search_box, #search_results {
   margin-top: 10px;
   border: 1px solid transparent;
   border-radius: 2px 0 0 2px;
@@ -44,7 +44,40 @@ body {
   padding: 0 11px 0 13px;
   text-overflow: ellipsis;
   width: 300px;
+  overflow-y: scroll;
 
+}
+
+#search_results {
+	margin-top: -6px;
+	margin-left: 126px;
+	height: auto;
+	max-height: 140px;
+	overflow-y: scroll;
+}
+
+#search_results_div {
+	max-height: 100px;
+}
+
+li:hover {
+	background-color: #E6E6E6;
+	cursor: pointer;
+
+}
+
+ul { 
+	list-style-type:none;
+	margin-top: -6px;
+}
+
+li {
+	width: 294px;
+	border: 1px solid #E6E6E6;
+	padding: 2px 2px 2px 2px;
+	background: white;
+	margin-left: -14px;
+	padding-left: 13px;
 }
 
 #button {
@@ -60,6 +93,7 @@ body {
 
 #button:hover {
 	background-color: #E6E6E6;
+
 }
 
 #loading { 
@@ -67,7 +101,7 @@ body {
 	text-align: center;
 }
 
-@media screen and (min-device-width: 320px) and (max-device-width: 667px) {
+@media screen and (min-device-width: 320px) and (max-device-width: 768px) {
 	#legend{
 		margin-right: 5px;
 		margin-bottom: 5px;
@@ -78,6 +112,21 @@ body {
 		font-size:12px;
 		margin-left: -5px;
 		margin-right: -5px;
+	}
+	#search_results {
+		width: 130px;
+		font-size: 12px;
+		margin-left: 121px;
+		margin-top: -10px;
+		max-height: 140px;
+	}
+	ul {
+		max-height: 120px;
+		overflow-y: scroll;
+	}
+	li {
+		width: 113px;
+		font-size: 12px;
 	}
 	#button {
 		font-size: 12px;
