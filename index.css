@@ -116,7 +116,7 @@ li {
 	#search_results {
 		width: 130px;
 		font-size: 12px;
-		margin-left: 121px;
+		margin-left: 120px;
 		margin-top: -10px;
 		max-height: 140px;
 	}
@@ -130,6 +130,7 @@ li {
 	}
 	#button {
 		font-size: 12px;
-		margin-left: 4px;
+		margin-left: 5px;
+		margin-top: -10px;
 	}
 }
