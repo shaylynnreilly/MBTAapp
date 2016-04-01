@@ -29,9 +29,13 @@
             //initializes map
             function init()
             {
+                console.log("init")
+                $("#search_results").hide();
+
                 map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
                 map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
                     document.getElementById('legend'));
+                map.controls[google.maps.ControlPosition.LEFT_TOP].push(document.getElementById('search_results'));
                 var input = document.getElementById("search_input");
                 map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
                 var loading = document.getElementById("loading");
@@ -44,6 +48,7 @@
                         route_loop(htmlform.station.value);
                     }
                 });
+                console.log("my loc");
                 getMyLocation();
             }
             
@@ -51,6 +56,7 @@
             function getMyLocation()
             {
                 if (navigator.geolocation) { // the navigator.geolocation object is supported on your browser
+                    console.log("geo");
                     navigator.geolocation.getCurrentPosition(function(position) {
                         myLat = position.coords.latitude;
                         myLng = position.coords.longitude;
@@ -67,6 +73,7 @@
                 console.log("render map");
                 me = new google.maps.LatLng(myLat, myLng);
                 console.log(myLat + " " + myLng);
+                console.log(me);
                 // Update map and go there...
                 map.panTo(me);
                 //pull data
@@ -121,6 +128,7 @@
                 // Open info window on click of marker
                 google.maps.event.addListener(stop_marker, 'click', function() {
                     showLoading();
+                    $("#search_results").hide();
                     text = "";
                     station_request(stop.stop_id, stop.parent_station)
                     setTimeout(function(){
@@ -356,6 +364,11 @@
         }
         function route_loop(searched) {
             showLoading();
+            search_content = "";
+            search_results = []
+            search_result_box = document.getElementById("search_results");
+            search_result_box.innerHTML = "";
+            $("#search_results").show();
             searching = "";
             search_station = searched;
             route_request = new XMLHttpRequest;
@@ -368,7 +381,11 @@
                     hideLoading();
                     alert("There aren't any stations with that name");
                 }
-            }, 2000);
+                else {
+                    search_result_box.innerHTML = search_content;
+
+                }
+            }, 2500);
         }
         function station_loop() {
             if (this.readyState == 4 && this.status == 200) {
@@ -391,35 +408,43 @@
             var searched_station_positions = [];
             for (var x = 0; x < station_request_response.direction.length; x++) {
                 for (var y = 0; y < station_request_response.direction[x].stop.length; y++) {
-                    var station_check = station_request_response.direction[x].stop[y].parent_station_name.toLowerCase();
-                    var station_check2 = station_request_response.direction[x].stop[y].stop_name.toLowerCase();
-                    if ((station_check.indexOf(search_station.toLowerCase()) != -1) || (station_check2.indexOf(search_station.toLowerCase()) != -1)) {
+                    var station_check = station_request_response.direction[x].stop[y].parent_station_name;
+                    var station_check2 = station_request_response.direction[x].stop[y].stop_name;
+                    var full_station = station_check + " " + station_check2
+                    if (station_check != "") {
+                        full_station = station_check;
+                    }
+                    if ((station_check.toLowerCase().indexOf(search_station.toLowerCase()) != -1) || (station_check2.toLowerCase().indexOf(search_station.toLowerCase()) != -1)) {
                         plotStation(station_request_response.direction[x].stop[y]);
-                        var new_position = new google.maps.LatLng(station_request_response.direction[x].stop[y].stop_lat, station_request_response.direction[x].stop[y].stop_lon)
-                        searched_station_results.push(station_check + " " + station_check2);
-                        searched_station_positions.push(new_position)
-                        //map.panTo(new_position);
+                        searched_station_results.push(full_station);
                         searching = "true";
                         hideLoading();
                         break;
                     }
                 }
                 //put list of returned search results if searched station results > len 1 -- clickable 
-                var search_result_box = document.getElementById("search_results");
-                var content = "<ul>";
-                for (var i = 0; i < searched_station_results.length; i++) {
-                    content = content + "<li onclick=\"search_select(" + searched_station_positions[i] + ")\">" + searched_station_results[i] + "</li>";
+                if (station_check.toLowerCase().indexOf(search_station.toLowerCase()) != -1 || station_check2.toLowerCase().indexOf(search_station.toLowerCase()) != -1) {
+                    console.log(search_result_box.innerHTML);      
+                    console.log(station_check2);          
+                    console.log(search_results);
+                    if(search_results.indexOf(full_station) == -1) {
+                        search_results.push(full_station);
+                        search_content = search_content + "<li onclick=\"search_select(" + station_request_response.direction[x].stop[y].stop_lat + ", " + station_request_response.direction[x].stop[y].stop_lon + ")\">" + full_station + "</li>";
+                    }
+                
+                
+                console.log(search_content);
+                search_result_box.innerHTML = search_content;
+                  //  break;
                 }
-                content = content + "</ul>";
-                /*if (station_check.indexOf(search_station.toLowerCase()) != -1) {
-                    break;
-                }*/
             }
+            
             }
         }
-        function search_select(pos) {
+        function search_select(myLat, myLng) {
             $("#search_results").hide();
-            map.panTo(pos)
+            var position = new google.maps.LatLng(myLat, myLng)
+            map.panTo(position)
         }
         function showLoading() {
             $("#loading").show();
@@ -438,9 +463,11 @@
         <div id="loading">
             <p><img id="loading_gif" src="loading.gif"/><br/>Loading</p>
         </div>
-        <div id = "search_results">
-        </div>
+        
         <div id="map_canvas">
+        </div>
+        <div id = "search_results_div">
+            <ul id = "search_results"><li>Select a stop:</li></ul>
         </div>
         <div id="legend" style="cursor:pointer">
             <center><b>Legend</b><br/>
