@@ -57,11 +57,14 @@
             {
                 if (navigator.geolocation) { // the navigator.geolocation object is supported on your browser
                     console.log("geo");
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        myLat = position.coords.latitude;
-                        myLng = position.coords.longitude;
-                        renderMap();
-                    });
+                    //getCurrentPosition is now only supported with HTTPS
+//                     navigator.geolocation.getCurrentPosition(function(position) {
+//                         myLat = position.coords.latitude;
+//                         myLng = position.coords.longitude;
+//                         renderMap();
+//                     });
+                    myLat = 42.3601;
+                    myLng = -71.0589;
                 }
                 else {
                     alert("Geolocation is not supported by your web browser.");
