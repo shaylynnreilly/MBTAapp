@@ -80,7 +80,7 @@
                 //pull data
                 request = new XMLHttpRequest(); 
                 request.onreadystatechange = dataReady;
-                url = "http://realtime.mbta.com/developer/api/v2/stopsbylocation?api_key=wX9NwuHnZU2ToO7GmGR9uw&lat=" + myLat + "&lon=" + myLng + "&format=json"
+                url = "https://realtime.mbta.com/developer/api/v2/stopsbylocation?api_key=wX9NwuHnZU2ToO7GmGR9uw&lat=" + myLat + "&lon=" + myLng + "&format=json"
                 request.open("GET", url , true);
                 request.send();
                 // Create a marker
@@ -146,9 +146,9 @@
             function station_request(stop_id, parent_station) {
                 request2 = new XMLHttpRequest(); 
                 request2.onreadystatechange = getRoutes;
-                url2 = "http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop_id + "&format=json";
+                url2 = "https://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop_id + "&format=json";
                 if (parent_station != "") {
-                    url2 = "http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + parent_station + "&format=json";
+                    url2 = "https://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + parent_station + "&format=json";
                 }
                 request2.open("GET", url2 , true);
                 request2.send();
@@ -169,9 +169,9 @@
                 setTimeout(function(){
                     request3 = new XMLHttpRequest();
                     request3.onreadystatechange = getSchedule;
-                    url3 = "http://realtime.mbta.com/developer/api/v2/schedulebystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop_id + "&format=json";
+                    url3 = "https://realtime.mbta.com/developer/api/v2/schedulebystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + stop_id + "&format=json";
                     if (parent_station != "") {
-                        url3 = "http://realtime.mbta.com/developer/api/v2/schedulebystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + parent_station + "&format=json";
+                        url3 = "https://realtime.mbta.com/developer/api/v2/schedulebystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=" + parent_station + "&format=json";
                     }
                     request3.open("GET", url3, true);
                     request3.send();
@@ -283,7 +283,7 @@
         full_route_name = full_name;
             request4 = new XMLHttpRequest;
             request4.onreadystatechange = plotRoute;
-            url4 = ("http://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key=wX9NwuHnZU2ToO7GmGR9uw&route=" + route_plot + "&format=json");
+            url4 = ("https://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key=wX9NwuHnZU2ToO7GmGR9uw&route=" + route_plot + "&format=json");
             request4.open("GET", url4, true);
             request4.send();
         }
@@ -374,7 +374,7 @@
             search_station = searched;
             route_request = new XMLHttpRequest;
             route_request.onreadystatechange = station_loop;
-            route_url = "http://realtime.mbta.com/developer/api/v2/routes?api_key=wX9NwuHnZU2ToO7GmGR9uw&format=json";
+            route_url = "https://realtime.mbta.com/developer/api/v2/routes?api_key=wX9NwuHnZU2ToO7GmGR9uw&format=json";
             route_request.open("GET", route_url, true);
             route_request.send();
             setTimeout(function(){
@@ -395,7 +395,7 @@
                 for (var y = 0; y < route_request_response.mode[x].route.length; y++) {
                     var station_loop_request = new XMLHttpRequest;
                     station_loop_request.onreadystatechange = find_station;
-                    station_url = "http://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key=wX9NwuHnZU2ToO7GmGR9uw&route=" + route_request_response.mode[x].route[y].route_id + "&format=json";
+                    station_url = "https://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key=wX9NwuHnZU2ToO7GmGR9uw&route=" + route_request_response.mode[x].route[y].route_id + "&format=json";
                     station_loop_request.open("GET", station_url, true);
                     station_loop_request.send();
                 }
